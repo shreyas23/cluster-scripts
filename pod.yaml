@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: sceneflow # Name of our deployment
+  labels:
+    app: sceneflow
+spec:
+  selector:        # this is how deployment knows what pod to manage
+    matchLabels:
+      app: sceneflow
+  template:
+    metadata:
+      name: sceneflow
+      labels:
+        app: sceneflow
+    spec:
+      containers:
+      - name: sceneflow
+        image: hurunyan/cuda10
+        ports:
+         - containerPort: 86
+        args: ["sleep", "infinity"]
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+            memory: "40Gi"
+            cpu: 16
+          requests:
+            memory: "15Gi"
+            cpu: 4
+        volumeMounts:
+        - mountPath: /chei-cv
+          name: fs-store
+        - mountPath: /dev/shm
+          name: dshm
+      restartPolicy: Always
+      volumes:
+      - name: fs-store
+        flexVolume:
+          driver: ceph.rook.io/rook
+          fsType: ceph
+          options:
+            clusterNamespace: rook
+            fsName: nautilusfs
+            path: /chei-cv
+            mountUser: chei-cv
+            mountSecret: ceph-fs-secret
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      nodeSelector:
+        gpu-type: 1080Ti

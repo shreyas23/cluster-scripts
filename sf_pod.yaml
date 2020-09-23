@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cnet
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: topology.kubernetes.io/region
+            operator: In
+            values:
+            - us-west
+          - key: gpu-type
+            operator: In 
+            values:
+            - 1080Ti
+  containers:
+  - name: cnet
+    image: hurunyan/cuda10
+    args: ["sleep", "infinity"]
+    resources:
+      limits:
+        memory: "8Gi"
+        cpu: 2
+        nvidia.com/gpu: 1
+      requests:
+        memory: "8Gi"
+        cpu: 2
+        nvidia.com/gpu: 1
+    volumeMounts:
+      - mountPath: /ceph
+        name: sceneflow-datasets
+      - name: dshm
+        mountPath: /dev/shm
+  volumes:
+  - name: sceneflow-datasets
+    persistentVolumeClaim:
+      claimName: sceneflow-datasets
