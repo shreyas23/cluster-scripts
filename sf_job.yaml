@@ -10,6 +10,10 @@ spec:
          requiredDuringSchedulingIgnoredDuringExecution:
            nodeSelectorTerms:
            - matchExpressions:
+             - key: topology.kubernetes.io/region
+               operator: In
+               values:
+               - us-west
              - key: gpu-type
                operator: In
                values:
@@ -30,7 +34,7 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 16Gi
+            memory: 12Gi
             cpu: "4"
             nvidia.com/gpu: "1"
           requests:

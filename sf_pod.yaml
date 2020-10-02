@@ -38,3 +38,6 @@ spec:
   - name: sceneflow-datasets
     persistentVolumeClaim:
       claimName: sceneflow-datasets
+  - name: dshm
+    emptyDir:
+      medium: Memory
