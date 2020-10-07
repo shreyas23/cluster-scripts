@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cnet-parallel
+spec:
+  template:
+    spec:
+      affinity:
+       nodeAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+           - matchExpressions:
+             - key: topology.kubernetes.io/region
+               operator: In
+               values:
+               - us-west
+             - key: gpu-type
+               operator: In
+               values:
+               - V100
+      containers:
+      - name: cnet-parallel
+        image: hurunyan/cuda10
+        command:
+        - sh
+        - -c
+        - "cd /opt/repo/motionflow/ && apt update && apt install -y python3-pip && pip3 install --upgrade pip && chmod u+x env_setup_dist.sh && pwd && ./env_setup_dist.sh"
+        volumeMounts:
+        - name: git-repo
+          mountPath: /opt/repo
+        - name: sceneflow-datasets
+          mountPath: /ceph
+        - name: dshm
+          mountPath: /dev/shm
+        resources:
+          limits:
+            memory: 22Gi
+            cpu: "4"
+            nvidia.com/gpu: "2"
+          requests:
+            memory: 14Gi
+            cpu: "2"
+            nvidia.com/gpu: "2"
+      initContainers:
+      - name: init-clone-repo
+        image: alpine/git
+        args:
+          - clone
+          - --single-branch
+          - https://github.com/shreyas23/motionflow.git
+          - /opt/repo/motionflow
+        volumeMounts:
+          - name: git-repo
+            mountPath: /opt/repo
+      volumes:
+      - name: git-repo
+        emptyDir: {}
+      - name: sceneflow-datasets
+        persistentVolumeClaim:
+          claimName: sceneflow-datasets
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      restartPolicy: Never
+  backoffLimit: 0
