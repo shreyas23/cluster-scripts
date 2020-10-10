@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cnet-parallel
+  name: scenenet-stereo
 spec:
   template:
     spec:
@@ -17,10 +17,9 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - T4
-               - V100
+               - 2080Ti
       containers:
-      - name: cnet-parallel
+      - name: scenenet-stereo
         image: hurunyan/cuda10
         command:
         - sh
@@ -35,12 +34,12 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 22Gi
-            cpu: "4"
+            memory: 24Gi
+            cpu: "5"
             nvidia.com/gpu: "2"
           requests:
             memory: 14Gi
-            cpu: "2"
+            cpu: "3"
             nvidia.com/gpu: "2"
       initContainers:
       - name: init-clone-repo
