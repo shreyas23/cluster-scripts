@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cnet-parallel
+  name: scenenet-joint
 spec:
   template:
     spec:
@@ -17,15 +17,15 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - T4
-               - V100
+               - 1080Ti
+               - 2080Ti
       containers:
-      - name: cnet-parallel
+      - name: scenenet-joint
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "cd /opt/repo/motionflow/ && apt update && apt install -y python3-pip && pip3 install --upgrade pip && chmod u+x ./scripts/env_setup_dist.sh && pwd && ./scripts/env_setup_dist.sh"
+        - "cd /opt/repo/motionflow/ && apt update && apt install -y python3-pip && pip3 install --upgrade pip && chmod u+x ./scripts/env_setup_dist_joint.sh && pwd && ./scripts/env_setup_dist_joint.sh"
         volumeMounts:
         - name: git-repo
           mountPath: /opt/repo
@@ -35,7 +35,7 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 22Gi
+            memory: 20Gi
             cpu: "4"
             nvidia.com/gpu: "2"
           requests:

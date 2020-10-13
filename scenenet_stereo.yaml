@@ -18,6 +18,7 @@ spec:
                operator: In
                values:
                - 2080Ti
+               - 1080Ti
       containers:
       - name: scenenet-stereo
         image: hurunyan/cuda10
