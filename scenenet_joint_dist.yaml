@@ -18,6 +18,7 @@ spec:
                operator: In
                values:
                - 2080Ti
+               - 1080Ti
       containers:
       - name: scenenet-joint-dist
         image: hurunyan/cuda10
@@ -34,7 +35,7 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 20Gi
+            memory: 24Gi
             cpu: "4"
             nvidia.com/gpu: "2"
           requests:
