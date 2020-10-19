@@ -18,14 +18,13 @@ spec:
                operator: In
                values:
                - 2080Ti
-               - 1080Ti
       containers:
       - name: scenenet-joint-dist
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "cd /opt/repo/motionflow/ && apt update && apt install -y python3-pip && pip3 install --upgrade pip && chmod u+x ./scripts/env_setup_dist_joint.sh && pwd && ./scripts/env_setup_dist_joint.sh"
+        - "cd /opt/repo/motionflow/ && apt update && apt install -y python3-pip && pip3 install --upgrade pip && chmod u+x ./scripts/train_baseline_joint.sh && ./scripts/train_baseline_joint.sh"
         volumeMounts:
         - name: git-repo
           mountPath: /opt/repo
@@ -35,13 +34,13 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 24Gi
+            memory: 40Gi
             cpu: "4"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "4"
           requests:
-            memory: 14Gi
-            cpu: "2"
-            nvidia.com/gpu: "2"
+            memory: 32Gi 
+            cpu: "3"
+            nvidia.com/gpu: "4"
       initContainers:
       - name: init-clone-repo
         image: alpine/git
