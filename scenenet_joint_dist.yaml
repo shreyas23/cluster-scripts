@@ -19,6 +19,8 @@ spec:
                values:
                - 2080Ti
                - 1080Ti
+      nodeSelector:
+        nautilus.io/disktype: nvme
       containers:
       - name: scenenet-joint-dist
         image: hurunyan/cuda10
@@ -27,6 +29,8 @@ spec:
         - -c
         - "cd /opt/repo/motionflow/ && apt update && apt install -y python3-pip && pip3 install --upgrade pip && chmod u+x ./scripts/train_baseline_joint.sh && ./scripts/train_baseline_joint.sh"
         volumeMounts:
+        - name: data
+          mountPath: /mnt/data
         - name: git-repo
           mountPath: /opt/repo
         - name: sceneflow-datasets
@@ -38,10 +42,12 @@ spec:
             memory: 40Gi
             cpu: "4"
             nvidia.com/gpu: "4"
+            ephemeral-storage: 70Gi
           requests:
             memory: 32Gi 
             cpu: "3"
             nvidia.com/gpu: "4"
+            ephemeral-storage: 50Gi
       initContainers:
       - name: init-clone-repo
         image: alpine/git
@@ -54,6 +60,8 @@ spec:
           - name: git-repo
             mountPath: /opt/repo
       volumes:
+      - name: data
+        emptyDir: {}
       - name: git-repo
         emptyDir: {}
       - name: sceneflow-datasets

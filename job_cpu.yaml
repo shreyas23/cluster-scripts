@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tar-dataset
+spec:
+  template:
+    spec:
+      containers:
+      - name: tar-dataset
+        image: hurunyan/cuda10
+        command:
+        - sh
+        - -c
+        - "cd /ceph/ && tar -cf - kitti_jpg/ | pv > kitti2012.tar"
+        volumeMounts:
+        - name: sceneflow-datasets
+          mountPath: /ceph
+        resources:
+          limits:
+            memory: 3Gi
+            cpu: "5"
+          requests:
+            memory: 3Gi 
+            cpu: "5"
+      volumes:
+      - name: sceneflow-datasets
+        persistentVolumeClaim:
+          claimName: sceneflow-datasets
+      restartPolicy: Never
+  backoffLimit: 0
