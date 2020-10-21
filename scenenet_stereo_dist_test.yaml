@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: scenenet-stereo-dist
+  name: scenenet-stereo-test
 spec:
   template:
     spec:
@@ -19,15 +19,16 @@ spec:
                values:
                - 2080Ti
                - 1080Ti
+               - "1080"
       nodeSelector:
         nautilus.io/disktype: nvme
       containers:
-      - name: scenenet-stereo-dist
+      - name: scenenet-stereo-test
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "cd /opt/repo/motionflow/ && apt update && apt install -y python3-pip && pip3 install --upgrade pip & cp /ceph/kitti2012.tar /mnt/data/ && tar -C ./ -xvf kitti2012.tar && chmod u+x ./scripts/train_baseline_stereo.sh && ./scripts/train_baseline_stereo.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip & cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && chmod u+x ./scripts/train_baseline_stereo.sh && ./scripts/train_baseline_stereo.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -41,12 +42,12 @@ spec:
           limits:
             memory: 45Gi
             cpu: "4"
-            nvidia.com/gpu: "4"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
           requests:
             memory: 36Gi 
             cpu: "2"
-            nvidia.com/gpu: "4"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
