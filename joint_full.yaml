@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: scenenet-stereo-test
+  name: joint-full
 spec:
   template:
     spec:
@@ -19,16 +19,15 @@ spec:
                values:
                - 2080Ti
                - 1080Ti
-               - "1080"
       nodeSelector:
         nautilus.io/disktype: nvme
       containers:
-      - name: scenenet-stereo-test
+      - name: joint-full
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip & cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && chmod u+x ./scripts/train_baseline_stereo.sh && ./scripts/train_baseline_stereo.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip & cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && chmod u+x ./scripts/train_joint_motion_cons.sh && ./scripts/train_joint_motion_cons.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -41,12 +40,12 @@ spec:
         resources:
           limits:
             memory: 45Gi
-            cpu: "4"
+            cpu: "5"
             nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
           requests:
             memory: 36Gi 
-            cpu: "2"
+            cpu: "4"
             nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
       initContainers:
