@@ -20,9 +20,11 @@ spec:
       limits:
         memory: "8Gi"
         cpu: 2
+        nvidia.com/gpu: 1
       requests:
         memory: "8Gi"
         cpu: 2
+        nvidia.com/gpu: 1
     volumeMounts:
       - mountPath: /ceph
         name: sceneflow-datasets
