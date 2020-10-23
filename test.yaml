@@ -27,7 +27,7 @@ spec:
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && https://github.com/ClementPinard/Pytorch-Correlation-extension.git && python3 ./Pytorch-Correlation-extension/setup.py && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && chmod u+x ./scripts/train_baseline_joint.sh && ./scripts/train_baseline_joint.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && chmod u+x ./scripts/train_baseline_joint.sh && ./scripts/train_baseline_joint.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
