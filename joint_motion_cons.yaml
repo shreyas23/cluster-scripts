@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: test
+  name: joint-motion-cons
 spec:
   template:
     spec:
@@ -18,11 +18,12 @@ spec:
                operator: In
                values:
                - 2080Ti
+               - "titan-xp"
                - 1080Ti
       nodeSelector:
         nautilus.io/disktype: nvme
       containers:
-      - name: test
+      - name: joint-motion-cons
         image: hurunyan/cuda10
         command:
         - sh
