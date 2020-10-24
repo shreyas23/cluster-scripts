@@ -1,1 +1,1 @@
-kubectl apply -f $1 && kubectl get pods;
+kubectl apply -f $1 && kubectl get pods --watch;

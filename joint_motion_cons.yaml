@@ -27,7 +27,7 @@ spec:
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && chmod u+x ./scripts/train_baseline_joint.sh && ./scripts/train_baseline_joint.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_baseline_joint.sh && ./scripts/train_baseline_joint.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -39,14 +39,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 45Gi
+            memory: 50Gi
             cpu: "5"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
           requests:
-            memory: 36Gi 
+            memory: 50Gi 
             cpu: "4"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
