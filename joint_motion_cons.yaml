@@ -40,14 +40,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 50Gi
+            memory: 70Gi
             cpu: "5"
-            nvidia.com/gpu: "4"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
           requests:
-            memory: 50Gi 
+            memory: 55Gi 
             cpu: "4"
-            nvidia.com/gpu: "4"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
