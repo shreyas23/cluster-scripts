@@ -18,10 +18,6 @@ spec:
                operator: In
                values:
                - 2080Ti
-               - "titan-xp"
-               - 1080Ti
-      nodeSelector:
-        nautilus.io/disktype: nvme
       containers:
       - name: joint-motion-cons
         image: hurunyan/cuda10
@@ -42,12 +38,12 @@ spec:
           limits:
             memory: 70Gi
             cpu: "5"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
           requests:
             memory: 55Gi 
             cpu: "4"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
