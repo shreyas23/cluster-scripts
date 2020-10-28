@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: joint-mono-cons
+  name: joint-stereo
 spec:
   template:
     spec:
@@ -17,16 +17,14 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - titan-x
-               - titan-xp
-               - 1080Ti
+               - 2080Ti
       containers:
-      - name: joint-mono-cons
+      - name: joint-stereo
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_cons.sh && ./scripts/train_joint_mono_cons.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_stereo_nopts.sh && ./scripts/train_joint_stereo_nopts.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -38,14 +36,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 80Gi
-            cpu: "6"
-            nvidia.com/gpu: "5"
+            memory: 70Gi
+            cpu: "5"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
           requests:
-            memory: 60Gi 
-            cpu: "5"
-            nvidia.com/gpu: "5"
+            memory: 55Gi 
+            cpu: "4"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
@@ -69,5 +67,5 @@ spec:
       - name: dshm
         emptyDir:
           medium: Memory
-      restartPolicy: "OnFailure"
+      restartPolicy: Never
   backoffLimit: 2
