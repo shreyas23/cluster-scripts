@@ -13,7 +13,7 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - 2080Ti
+               - 1080Ti
       containers:
       - name: joint-mono
         image: hurunyan/cuda10
@@ -32,12 +32,12 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 80Gi
+            memory: 105Gi
             cpu: "6"
             nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
           requests:
-            memory: 60Gi 
+            memory: 80Gi 
             cpu: "5"
             nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi

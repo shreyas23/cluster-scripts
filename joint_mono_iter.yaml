@@ -13,7 +13,7 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - V100
+               - 2080Ti
       containers:
       - name: joint-mono-iter
         image: hurunyan/cuda10
@@ -32,14 +32,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 80Gi
+            memory: 140Gi
             cpu: "8"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "5"
             ephemeral-storage: 100Gi
           requests:
-            memory: 60Gi 
+            memory: 100Gi 
             cpu: "6"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "5"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
