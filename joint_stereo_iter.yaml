@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: joint-mono-eigen
+  name: joint-stereo-iter
 spec:
   template:
     spec:
@@ -15,12 +15,12 @@ spec:
                values:
                - 2080Ti
       containers:
-      - name: joint-mono-eigen
+      - name: joint-stereo-iter
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_eigen.sh && ./scripts/train_joint_mono_eigen.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_stereo_iter.sh && ./scripts/train_joint_stereo_iter.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -34,12 +34,12 @@ spec:
           limits:
             memory: 50Gi
             cpu: "5"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
           requests:
             memory: 40Gi 
             cpu: "4"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
@@ -63,5 +63,5 @@ spec:
       - name: dshm
         emptyDir:
           medium: Memory
-      restartPolicy: "OnFailure"
-  backoffLimit: 1
+      restartPolicy: "Never"
+  backoffLimit: 2

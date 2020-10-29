@@ -20,7 +20,7 @@ spec:
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_nopts.sh && ./scripts/train_joint_mono_nopts.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono.sh && ./scripts/train_joint_mono.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -63,5 +63,5 @@ spec:
       - name: dshm
         emptyDir:
           medium: Memory
-      restartPolicy: "OnFailure"
+      restartPolicy: "Never"
   backoffLimit: 2

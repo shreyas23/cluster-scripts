@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: joint-mono-eigen-resnet
+  name: joint-mono-iter
 spec:
   template:
     spec:
@@ -13,14 +13,14 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - 1080Ti
+               - V100
       containers:
-      - name: joint-mono-eigen-resnet
+      - name: joint-mono-iter
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_eigen_res.sh && ./scripts/train_joint_mono_eigen_res.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_iter.sh && ./scripts/train_joint_mono_iter.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -32,14 +32,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 80Gi 
-            cpu: "6"
-            nvidia.com/gpu: "4"
+            memory: 80Gi
+            cpu: "8"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
           requests:
             memory: 60Gi 
-            cpu: "4"
-            nvidia.com/gpu: "4"
+            cpu: "6"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
@@ -63,5 +63,5 @@ spec:
       - name: dshm
         emptyDir:
           medium: Memory
-      restartPolicy: "OnFailure"
-  backoffLimit: 0
+      restartPolicy: "Never"
+  backoffLimit: 2
