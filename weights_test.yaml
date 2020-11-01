@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: joint-mono-iter-test
+  name: weights-test
 spec:
   template:
     spec:
@@ -16,12 +16,12 @@ spec:
                - 2080Ti
                - 1080Ti
       containers:
-      - name: joint-mono-iter-test
+      - name: weights-test
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_iter_test.sh && ./scripts/train_joint_mono_iter_test.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/weights_test.sh && ./scripts/weights_test.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -33,13 +33,13 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 140Gi
-            cpu: "8"
+            memory: 120Gi
+            cpu: "7"
             nvidia.com/gpu: "6"
             ephemeral-storage: 100Gi
           requests:
-            memory: 120Gi 
-            cpu: "7"
+            memory: 80Gi 
+            cpu: "6"
             nvidia.com/gpu: "6"
             ephemeral-storage: 100Gi
       initContainers:
@@ -65,4 +65,4 @@ spec:
         emptyDir:
           medium: Memory
       restartPolicy: "Never"
-  backoffLimit: 2
+  backoffLimit: 0
