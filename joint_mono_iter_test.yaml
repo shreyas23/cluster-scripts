@@ -13,8 +13,8 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - 2080Ti
                - 1080Ti
+               - 2080Ti
       containers:
       - name: joint-mono-iter-test
         image: hurunyan/cuda10
@@ -35,12 +35,12 @@ spec:
           limits:
             memory: 60Gi
             cpu: "5"
-            nvidia.com/gpu: "3"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
           requests:
             memory: 40Gi 
             cpu: "4"
-            nvidia.com/gpu: "3"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
