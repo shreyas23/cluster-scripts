@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: weights-test
+  name: iter-no-fb-full
 spec:
   template:
     spec:
@@ -14,13 +14,16 @@ spec:
                operator: In
                values:
                - 2080Ti
+               - 1080Ti
+               - titan-x
+               - titan-xp
       containers:
-      - name: weights-test
+      - name: iter-no-fb-full
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/weights_test.sh && ./scripts/weights_test.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_iter_no_fb.sh && ./scripts/train_joint_mono_iter_no_fb.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -32,14 +35,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 100Gi
-            cpu: "8"
-            nvidia.com/gpu: "6"
+            memory: 60Gi
+            cpu: "6"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
           requests:
-            memory: 80Gi 
-            cpu: "7"
-            nvidia.com/gpu: "6"
+            memory: 40Gi 
+            cpu: "5"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
@@ -64,4 +67,4 @@ spec:
         emptyDir:
           medium: Memory
       restartPolicy: "Never"
-  backoffLimit: 0
+  backoffLimit: 2
