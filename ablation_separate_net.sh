@@ -13,10 +13,7 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - 2080Ti
-               - 1080Ti
-               - titan-x
-               - titan-xp
+               - V100
       containers:
       - name: ablation-separate
         image: hurunyan/cuda10
@@ -35,14 +32,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 40Gi
-            cpu: "4"
-            nvidia.com/gpu: "2"
+            memory: 30Gi
+            cpu: "3"
+            nvidia.com/gpu: "1"
             ephemeral-storage: 100Gi
           requests:
             memory: 20Gi 
-            cpu: "3"
-            nvidia.com/gpu: "2"
+            cpu: "2"
+            nvidia.com/gpu: "1"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo

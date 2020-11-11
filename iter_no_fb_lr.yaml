@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: old-warp
+  name: iter-no-fb-lr
 spec:
   template:
     spec:
@@ -15,15 +15,15 @@ spec:
                values:
                - 2080Ti
                - 1080Ti
-               - titan-xp
                - titan-x
+               - titan-xp
       containers:
-      - name: old-warp
+      - name: iter-no-fb-lr
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && git checkout working && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_joint_mono_iter_no_fb_sep.sh && ./scripts/train_joint_mono_iter_no_fb_sep.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/ablation_no_fb_lr.sh && ./scripts/ablation_no_fb_lr.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -35,20 +35,21 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 50Gi
-            cpu: "5"
-            nvidia.com/gpu: "3"
+            memory: 60Gi
+            cpu: "6"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
           requests:
-            memory: 30Gi 
-            cpu: "4"
-            nvidia.com/gpu: "3"
+            memory: 40Gi 
+            cpu: "5"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
         image: alpine/git
         args:
           - clone
+          - --single-branch
           - https://github.com/shreyas23/motionflow.git
           - /opt/repo/motionflow
         volumeMounts:

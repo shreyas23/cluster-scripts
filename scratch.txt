@@ -1,4 +1,0 @@
-             - key: topology.kubernetes.io/region
-               operator: In
-               values:
-               - us-west

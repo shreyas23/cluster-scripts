@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: iter-no-fb-full
+  name: ablation-no-cv
 spec:
   template:
     spec:
@@ -18,12 +18,12 @@ spec:
                - titan-x
                - titan-xp
       containers:
-      - name: iter-no-fb-full
+      - name: ablation-no-cv
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/ablation_no_fb.sh && ./scripts/ablation_no_fb.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/mono_iter_no_cv.sh && ./scripts/mono_iter_no_cv.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -41,7 +41,7 @@ spec:
             ephemeral-storage: 100Gi
           requests:
             memory: 40Gi 
-            cpu: "4"
+            cpu: "5"
             nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
       initContainers:
