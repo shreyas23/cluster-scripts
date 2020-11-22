@@ -23,7 +23,7 @@ spec:
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/iter_min_reproj.sh && ./scripts/iter_min_reproj.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && git checkout restart && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/resnet_split_avg.sh && ./scripts/resnet_split_avg.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -49,7 +49,6 @@ spec:
         image: alpine/git
         args:
           - clone
-          - --single-branch
           - https://github.com/shreyas23/motionflow.git
           - /opt/repo/motionflow
         volumeMounts:
