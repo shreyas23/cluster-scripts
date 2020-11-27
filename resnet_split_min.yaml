@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: resnet-min-reproj
+  name: resnet-split-min
 spec:
   template:
     spec:
@@ -13,17 +13,17 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - 1080Ti
                - 2080Ti
+               - 1080Ti
                - titan-x
                - titan-xp
       containers:
-      - name: resnet-min-reproj
+      - name: resnet-split-min
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && git checkout restart && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_no_mask.sh && ./scripts/train_no_mask.sh"
+        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti2012.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti2012.tar && cd /opt/repo/motionflow/ && git checkout restart && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/resnet_split_min.sh && ./scripts/resnet_split_min.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data

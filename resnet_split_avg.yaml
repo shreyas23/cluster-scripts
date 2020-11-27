@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: min-reproj
+  name: resnet-split-avg
 spec:
   template:
     spec:
@@ -18,7 +18,7 @@ spec:
                - titan-x
                - titan-xp
       containers:
-      - name: min-reproj
+      - name: resnet-split-avg
         image: hurunyan/cuda10
         command:
         - sh
@@ -35,7 +35,7 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 60Gi
+            memory: 60Gi 
             cpu: "6"
             nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
