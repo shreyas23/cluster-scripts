@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: resnet-split-sum
+  name: resnet-split-sum-mask
 spec:
   template:
     spec:
@@ -18,7 +18,7 @@ spec:
                - 2080Ti
                - titan-xp
       containers:
-      - name: resnet-split-sum
+      - name: resnet-split-sum-mask
         image: hurunyan/cuda10
         command:
         - sh
@@ -35,14 +35,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 80Gi
-            cpu: "7"
-            nvidia.com/gpu: "6"
+            memory: 60Gi
+            cpu: "6"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
           requests:
-            memory: 60Gi 
-            cpu: "7"
-            nvidia.com/gpu: "6"
+            memory: 40Gi 
+            cpu: "4"
+            nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
