@@ -14,6 +14,7 @@ spec:
                operator: In
                values:
                - 2080Ti
+               - 1080Ti
       containers:
       - name: resnet-split-sum
         image: hurunyan/cuda10
@@ -32,14 +33,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 60Gi
-            cpu: "5"
-            nvidia.com/gpu: "4"
+            memory: 30Gi
+            cpu: "3"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
           requests:
-            memory: 40Gi 
-            cpu: "4"
-            nvidia.com/gpu: "4"
+            memory: 20Gi 
+            cpu: "2"
+            nvidia.com/gpu: "2"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
