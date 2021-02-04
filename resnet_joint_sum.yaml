@@ -14,7 +14,6 @@ spec:
                operator: In
                values:
                - 2080Ti
-               - 1080Ti
       containers:
       - name: resnet-joint-sum
         image: hurunyan/cuda10
