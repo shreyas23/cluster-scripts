@@ -1,0 +1,67 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ups
+spec:
+  template:
+    spec:
+      affinity:
+       nodeAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+           - matchExpressions:
+             - key: gpu-type
+               operator: In
+               values:
+               - 1080Ti
+               - 2080Ti
+      containers:
+      - name: ups
+        image: hurunyan/cuda10
+        command:
+        - sh
+        - -c
+        - "apt update && apt install -y python3-pip tmux vim curl && pip3 install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp /ceph/cityscapes/gtFine_trainvaltest.zip ./ && cp /ceph/cityscapes/leftImg8bit_trainvaltest.zip ./ && unzip leftImg8bit_trainvaltest.zip && unzip gtFine_trainvaltest.zip && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh"
+        volumeMounts:
+        - name: data
+          mountPath: /mnt/data
+        - name: git-repo
+          mountPath: /opt/repo
+        - name: sceneflow-datasets
+          mountPath: /ceph
+        - name: dshm
+          mountPath: /dev/shm
+        resources:
+          limits:
+            memory: 30Gi
+            cpu: "3"
+            nvidia.com/gpu: "2"
+            ephemeral-storage: 200Gi
+          requests:
+            memory: 20Gi 
+            cpu: "2"
+            nvidia.com/gpu: "2"
+            ephemeral-storage: 200Gi
+      initContainers:
+      - name: init-clone-repo
+        image: alpine/git
+        args:
+          - clone
+          - https://github.com/arition/UPSNet.git
+          - /opt/repo/UPSNet
+        volumeMounts:
+          - name: git-repo
+            mountPath: /opt/repo
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: git-repo
+        emptyDir: {}
+      - name: sceneflow-datasets
+        persistentVolumeClaim:
+          claimName: sceneflow-datasets
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      restartPolicy: "Never"
+  backoffLimit: 2
