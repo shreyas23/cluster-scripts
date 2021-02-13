@@ -21,7 +21,8 @@ spec:
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip tmux vim curl && pip3 install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp /ceph/cityscapes/gtFine_trainvaltest.zip ./ && cp /ceph/cityscapes/leftImg8bit_trainvaltest.zip ./ && unzip leftImg8bit_trainvaltest.zip && unzip gtFine_trainvaltest.zip && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh"
+          #- "apt update && apt install -y python3-pip tmux vim curl && pip3 install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp /ceph/cityscapes/gtFine_trainvaltest.zip ./ && cp /ceph/cityscapes/leftImg8bit_trainvaltest.zip ./ && unzip leftImg8bit_trainvaltest.zip && unzip gtFine_trainvaltest.zip && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh"
+        - "apt update && apt install -y python3-pip tmux vim curl && pip3 install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp -r /ceph/cityscapes/gtFine ./ && cp -r /ceph/cityscapes/leftImg8bit ./ && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
