@@ -21,15 +21,20 @@ spec:
         memory: "8Gi"
         cpu: 2
         nvidia.com/gpu: 1
+        ephemeral-storage: 100Gi
       requests:
         memory: "8Gi"
         cpu: 2
         nvidia.com/gpu: 1
+        ephemeral-storage: 100Gi
     volumeMounts:
       - mountPath: /ceph
         name: sceneflow-datasets
+      - mountPath: /mnt/data/
+        name: data
   volumes:
   - name: sceneflow-datasets
     persistentVolumeClaim:
       claimName: sceneflow-datasets
-
+  - name: data
+    emptyDir: {}
