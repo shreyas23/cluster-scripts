@@ -17,12 +17,12 @@ spec:
                - 2080Ti
       containers:
       - name: ups
-        image: hurunyan/cuda10
+        image: pytorch/pytorch:1.7.0-cuda11.0-cudnn8-runtime
         command:
         - sh
         - -c
-          #- "apt update && apt install -y python3-pip tmux vim curl && pip3 install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp /ceph/cityscapes/gtFine_trainvaltest.zip ./ && cp /ceph/cityscapes/leftImg8bit_trainvaltest.zip ./ && unzip leftImg8bit_trainvaltest.zip && unzip gtFine_trainvaltest.zip && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh"
-        - "apt update && apt install -y python3-pip tmux vim curl && pip3 install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp -r /ceph/cityscapes/gtFine ./ && cp -r /ceph/cityscapes/leftImg8bit ./ && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh"
+        - "export CUDA_HOME=/usr/local/cuda && export PATH=${CUDA_HOME}/bin:${PATH} && apt update && apt install -y python3-pip tmux vim curl git unzip && python3 -m pip install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && ln -s $CITYSCAPES_ROOT /mnt/data/cityscapes && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh && ./init.sh && python3 ./upsnet/upsnet_end2end_train.py --cfg upsnet/experiments/upsnet_resnet50_cityscapes_1gpu.yaml"
+          # - "apt update && apt install -y python3-pip tmux vim curl git unzip && python3 -m pip install --upgrade pip && mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp -r /ceph/cityscapes/gtFine ./ && cp -r /ceph/cityscapes/leftImg8bit ./ && cd /opt/repo/UPSNet && git fetch && git checkout shreyas-baseline && ln -s $CITYSCAPES_ROOT /mnt/data/cityscapes && chmod u+x ceph_cityscapes.sh && ./ceph_cityscapes.sh && ./init.sh && python3 ./upsnet/upsnet_end2end_train.py --cfg upsnet/experiments/upsnet_resnet50_cityscapes_1gpu.yaml"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
