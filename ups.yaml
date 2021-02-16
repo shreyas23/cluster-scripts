@@ -64,4 +64,4 @@ spec:
         emptyDir:
           medium: Memory
       restartPolicy: "Never"
-  backoffLimit: 0
+  backoffLimit: 1

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: cnet-cpu
+  name: gpu-pod
 spec:
   affinity:
     nodeAffinity:
@@ -13,8 +13,8 @@ spec:
             values:
             - 1080Ti
   containers:
-  - name: cnet-cpu
-    image: hurunyan/cuda10
+  - name: gpu-pod
+    image: pytorch/pytorch:0.4.1-cuda9-cudnn7-devel
     args: ["sleep", "infinity"]
     resources:
       limits:
@@ -32,9 +32,14 @@ spec:
         name: sceneflow-datasets
       - mountPath: /mnt/data/
         name: data
+      - name: dshm
+        mountPath: /dev/shm
   volumes:
   - name: sceneflow-datasets
     persistentVolumeClaim:
       claimName: sceneflow-datasets
   - name: data
     emptyDir: {}
+  - name: dshm
+    emptyDir:
+      medium: Memory
