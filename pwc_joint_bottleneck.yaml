@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: pwc-joint-sum
+  name: pwc-joint-bottleneck
 spec:
   template:
     spec:
@@ -16,7 +16,7 @@ spec:
                - 1080Ti
                - 2080Ti
       containers:
-      - name: pwc-joint-sum
+      - name: pwc-joint-bottleneck
         image: hurunyan/cuda10
         command:
         - sh
