@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: resnet-joint-sum
+  name: bottleneck-mask-stage1
 spec:
   template:
     spec:
@@ -13,14 +13,15 @@ spec:
              - key: gpu-type
                operator: In
                values:
+               - 1080Ti
                - 2080Ti
       containers:
-      - name: resnet-joint-sum
+      - name: bottleneck-mask-stage1
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git pull && git checkout restart && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/resnet_joint_sum.sh && ./scripts/resnet_joint_sum.sh"
+        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout 3d_test && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/bottleneck_no_mask_stage1.sh && ./scripts/bottleneck_no_mask_stage1.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
