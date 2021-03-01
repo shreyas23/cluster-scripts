@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: cnet-cpu
+  name: cpu-pod
 spec:
   containers:
-  - name: cnet-cpu
+  - name: cpu-pod
     image: hurunyan/cuda10
     args: ["sleep", "infinity"]
     resources:
