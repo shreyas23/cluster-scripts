@@ -33,12 +33,12 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 20Gi
+            memory: 5Gi
             cpu: "2"
             nvidia.com/gpu: "1"
             ephemeral-storage: 200Gi
           requests:
-            memory: 10Gi 
+            memory: 2Gi
             cpu: "1"
             nvidia.com/gpu: "1"
             ephemeral-storage: 200Gi

@@ -21,7 +21,7 @@ spec:
         command:
         - sh
         - -c
-        - "cp -r /ceph/cycada/cyclegan_data /mnt/data/ && apt update && apt install -y python3-pip tmux vim curl git unzip ffmpeg libsm6 libxext6 && python3 -m pip install --upgrade pip && cd /opt/repo/DLOW && pip install -r requirements.txt && CUDA_VISIBLE_DEVICES=0 python train.py --dataroot /mnt/data/cyclegan_data/ --name dlow_gta2cityscapes --model cycle_gan --checkpoints_dir ./checkpoints --lambda_identity 1.0 --progressive_epoch 10 --lambda_A 10.0 --lambda_B 10.0 --lambda_GA_classification 1.0 --lambda_GB_classification 1.0 --lambda_GA_classification_0 1.0 --lambda_GB_classification_0 1.0 --lambda_GA 1.0 --lambda_GB 1.0 --resize_or_crop scale_width_and_crop --loadSize 1024 --fineSize 400 --save_epoch_freq 1 --display_id 0"
+        - "cp -r /ceph/cycada/cyclegan_data /mnt/data/ && apt update && apt install -y python3-pip tmux vim curl git unzip ffmpeg libsm6 libxext6 && python3 -m pip install --upgrade pip && cd /opt/repo/DLOW && pip install -r requirements.txt && CUDA_LAUNCH_BLOCKING=1 python train.py --dataroot /mnt/data/cyclegan_data/ --name dlow_gta2cityscapes --model cycle_gan --checkpoints_dir /ceph/dlow_checkpoints --lambda_identity 1.0 --progressive_epoch 10 --lambda_A 10.0 --lambda_B 10.0 --lambda_GA_classification 1.0 --lambda_GB_classification 1.0 --lambda_GA_classification_0 1.0 --lambda_GB_classification_0 1.0 --lambda_GA 1.0 --lambda_GB 1.0 --resize_or_crop scale_width_and_crop --loadSize 1024 --fineSize 400 --save_epoch_freq 1 --display_id 0"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -33,12 +33,12 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 20Gi
+            memory: 5Gi
             cpu: "2"
             nvidia.com/gpu: "1"
             ephemeral-storage: 200Gi
           requests:
-            memory: 10Gi 
+            memory: 2Gi 
             cpu: "1"
             nvidia.com/gpu: "1"
             ephemeral-storage: 200Gi
