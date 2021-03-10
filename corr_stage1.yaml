@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: corr-mask
+  name: corr-stage1
 spec:
   template:
     spec:
@@ -16,12 +16,12 @@ spec:
                - 1080Ti
                - 2080Ti
       containers:
-      - name: corr-mask
+      - name: corr-stage1
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout fml && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/corr_mask_stage1.sh && ./scripts/corr_mask_stage1.sh"
+        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota-large && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/corr_stage1.sh && ./scripts/corr_stage1.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -33,12 +33,12 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 50Gi
+            memory: 60Gi
             cpu: "5"
             nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi
           requests:
-            memory: 40Gi 
+            memory: 50Gi 
             cpu: "4"
             nvidia.com/gpu: "4"
             ephemeral-storage: 100Gi

@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: ups
+  name: stage1
 spec:
   template:
     spec:
@@ -16,12 +16,12 @@ spec:
                - 1080Ti
                - 2080Ti
       containers:
-      - name: ups
-        image: pytorch/pytorch:0.4.1-cuda9-cudnn7-devel
+      - name: stage1
+        image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "export CUDA_HOME=/usr/local/cuda &&  export LD_LIBRARY_PATH=${CUDA_HOME}/lib64 && export PATH=${CUDA_HOME}/bin:${PATH} && apt update && apt install -y python3-pip tmux vim curl git unzip ffmpeg libsm6 libxext6 && python3 -m pip install --upgrade pip &&  mkdir -p /mnt/data/cityscapes/ && cd /mnt/data/cityscapes/ && cp -r /ceph/cityscapes/ups/images ./ && cp -r /ceph/cityscapes/ups/labels ./ && cd /opt/repo/UPSNet && git fetch && git checkout rollback && ln -s $CITYSCAPES_ROOT /mnt/data/cityscapes && chmod u+x init_cityscapes.sh && chmod u+x init.sh && ./init_cityscapes.sh && ./init.sh && python3 ./upsnet/upsnet_end2end_train.py --cfg upsnet/experiments/upsnet_resnet50_cityscapes_1gpu.yaml"
+        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota-large && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/stage1.sh && ./scripts/stage1.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -33,22 +33,22 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 20Gi
-            cpu: "2"
-            nvidia.com/gpu: "1"
-            ephemeral-storage: 200Gi
+            memory: 60Gi
+            cpu: "5"
+            nvidia.com/gpu: "4"
+            ephemeral-storage: 100Gi
           requests:
-            memory: 10Gi 
-            cpu: "1"
-            nvidia.com/gpu: "1"
-            ephemeral-storage: 200Gi
+            memory: 50Gi 
+            cpu: "4"
+            nvidia.com/gpu: "4"
+            ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
         image: alpine/git
         args:
           - clone
-          - https://github.com/arition/UPSNet.git
-          - /opt/repo/UPSNet
+          - https://github.com/shreyas23/motionflow.git
+          - /opt/repo/motionflow
         volumeMounts:
           - name: git-repo
             mountPath: /opt/repo
@@ -64,4 +64,4 @@ spec:
         emptyDir:
           medium: Memory
       restartPolicy: "Never"
-  backoffLimit: 1
+  backoffLimit: 2
