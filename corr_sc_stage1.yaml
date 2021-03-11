@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: corr-stage1
+  name: corr-sc-stage1
 spec:
   template:
     spec:
@@ -16,12 +16,12 @@ spec:
                - 1080Ti
                - 2080Ti
       containers:
-      - name: corr-stage1
+      - name: corr-sc-stage1
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/corr_stage1.sh && ./scripts/corr_stage1.sh"
+        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/corr_sc_stage1.sh && ./scripts/corr_sc_stage1.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data

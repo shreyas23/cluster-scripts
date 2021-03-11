@@ -21,7 +21,7 @@ spec:
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota-large && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/stage1.sh && ./scripts/stage1.sh"
+        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/stage1.sh && ./scripts/stage1.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
