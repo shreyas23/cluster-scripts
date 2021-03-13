@@ -13,8 +13,7 @@ spec:
              - key: gpu-type
                operator: In
                values:
-               - 1080Ti
-               - 2080Ti
+               - titan-xp
       containers:
       - name: stage1
         image: hurunyan/cuda10
@@ -33,14 +32,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 60Gi
-            cpu: "5"
-            nvidia.com/gpu: "4"
+            memory: 30Gi
+            cpu: "4"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
           requests:
-            memory: 50Gi 
-            cpu: "4"
-            nvidia.com/gpu: "4"
+            memory: 20Gi 
+            cpu: "3"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo

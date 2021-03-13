@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: corr-sc-stage1
+  name: monosf
 spec:
   template:
     spec:
@@ -16,12 +16,12 @@ spec:
                - 1080Ti
                - 2080Ti
       containers:
-      - name: corr-sc-stage1
+      - name: monosf
         image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/corr_sc_stage1.sh && ./scripts/corr_sc_stage1.sh"
+        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/monosf.sh && ./scripts/monosf.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -33,14 +33,14 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 35Gi
-            cpu: "5"
-            nvidia.com/gpu: "4"
+            memory: 30Gi
+            cpu: "4"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
           requests:
             memory: 20Gi 
-            cpu: "4"
-            nvidia.com/gpu: "4"
+            cpu: "3"
+            nvidia.com/gpu: "3"
             ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
