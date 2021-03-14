@@ -14,14 +14,13 @@ spec:
                operator: In
                values: 
                  - 1080Ti
-                 - 2080Ti
       containers:
       - name: cycle-gan-gta-cs
         image: pytorch/pytorch:0.4.1-cuda9-cudnn7-devel
         command:
         - sh
         - -c
-        - "cp -r /ceph/cycada/cyclegan_data /mnt/data/ && mv /mnt/data/cyclegan_data/trainA /mnt/data/cyclegan_data/testA && mv /mnt/data/cyclegan_data/trainB /mnt/data/cyclegan_data/testB && apt update && apt install -y python3-pip tmux vim curl git unzip ffmpeg libsm6 libxext6 && python3 -m pip install --upgrade pip && cd /opt/repo/cycada_release/cyclegan && pip install -r requirements.txt && chmod u+x test_gta2cityscapes.sh && ./test_gta2cityscapes.sh && cp -r /mnt/data/cyclegan_data/adapted /ceph/gta_adapted"
+        - "mkdir /mnt/data/cyclegan_data && cp -r /ceph/cycada/cyclegan_data/trainA /mnt/data/cyclegan_data/trainA && apt update && apt install -y python3-pip tmux vim curl git unzip ffmpeg libsm6 libxext6 && python3 -m pip install --upgrade pip && cd /opt/repo/cycada_release/cyclegan && pip install -r requirements.txt && chmod u+x test_gta2cityscapes.sh && ./test_gta2cityscapes.sh && cp -r /mnt/data/cyclegan_data/adapted /ceph/final_gta_adapted"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
