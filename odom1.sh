@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cycle-gan-gta-cs
+  name: odom-train1
 spec:
   template:
     spec:
@@ -12,15 +12,16 @@ spec:
            - matchExpressions:
              - key: gpu-type
                operator: In
-               values: 
-                 - 1080Ti
+               values:
+               - 1080Ti
+               - 2080Ti
       containers:
-      - name: cycle-gan-gta-cs
-        image: pytorch/pytorch:0.4.1-cuda9-cudnn7-devel
+      - name: odom-train1
+        image: hurunyan/cuda10
         command:
         - sh
         - -c
-        - "cp -r /ceph/cycada/cyclegan_data /mnt/data/ && apt update && apt install -y python3-pip tmux vim curl git unzip ffmpeg libsm6 libxext6 && python3 -m pip install --upgrade pip && cd /opt/repo/cycada_release/cyclegan && pip install -r requirements.txt && chmod u+x train_gta2cityscapes.sh && ./train_gta2cityscapes.sh"
+        - "apt update && apt install -y python3-pip tmux vim && pip3 install --upgrade pip && cp /ceph/kitti.tar /mnt/data/ && tar -C /mnt/data/ -xvf /mnt/data/kitti.tar && cd /opt/repo/motionflow/ && git fetch && git checkout sota && git pull && pip3 install -r requirements.txt && chmod u+x ./scripts/install_modules.sh && ./scripts/install_modules.sh && chmod u+x ./scripts/train_odom.sh && ./scripts/train_odom.sh"
         volumeMounts:
         - name: data
           mountPath: /mnt/data
@@ -32,23 +33,22 @@ spec:
           mountPath: /dev/shm
         resources:
           limits:
-            memory: 5Gi
-            cpu: "2"
-            nvidia.com/gpu: "1"
-            ephemeral-storage: 200Gi
+            memory: 50Gi
+            cpu: "5"
+            nvidia.com/gpu: "4"
+            ephemeral-storage: 100Gi
           requests:
-            memory: 4Gi
-            cpu: "1"
-            nvidia.com/gpu: "1"
-            ephemeral-storage: 200Gi
+            memory: 40Gi 
+            cpu: "4"
+            nvidia.com/gpu: "4"
+            ephemeral-storage: 100Gi
       initContainers:
       - name: init-clone-repo
         image: alpine/git
         args:
-          - clone 
-          - --recursive
-          - https://github.com/raviteja-kvns/cycada_release.git
-          - /opt/repo/cycada_release
+          - clone
+          - https://github.com/shreyas23/motionflow.git
+          - /opt/repo/motionflow
         volumeMounts:
           - name: git-repo
             mountPath: /opt/repo
@@ -64,4 +64,4 @@ spec:
         emptyDir:
           medium: Memory
       restartPolicy: "Never"
-  backoffLimit: 1
+  backoffLimit: 2
