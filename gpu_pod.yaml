@@ -14,16 +14,16 @@ spec:
             - 1080Ti
   containers:
   - name: gpu-pod
-    image: pytorch/pytorch:0.4.1-cuda9-cudnn7-devel
+    image: hurunyan/cuda10
     args: ["sleep", "infinity"]
     resources:
       limits:
-        memory: "8Gi"
+        memory: "12Gi"
         cpu: 2
         nvidia.com/gpu: 1
         ephemeral-storage: 100Gi
       requests:
-        memory: "8Gi"
+        memory: "12Gi"
         cpu: 2
         nvidia.com/gpu: 1
         ephemeral-storage: 100Gi
